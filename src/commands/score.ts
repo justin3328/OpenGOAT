@@ -39,10 +39,10 @@ export async function scoreWeek() {
   const total = (velocityScore * 0.4) + (consistency * 0.3) + (momentum * 0.2) + (pathFit * 0.1);
   const xpEarnt = Math.round(total * 10);
   
-  let rank: any = 'GHOST';
-  if (total > 90) rank = 'APEX';
-  else if (total > 70) rank = 'OPERATOR';
-  else if (total > 40) rank = 'RECRUIT';
+  let rank: any = 'Ghost';
+  if (total > 90) rank = 'Apex';
+  else if (total > 70) rank = 'Operator';
+  else if (total > 40) rank = 'Recruit';
 
   const scoreEntry = {
     goalId,

@@ -41,6 +41,26 @@ export class GoalsRepo {
   }
 
   /**
+   * Returns all goals regardless of status.
+   */
+  static getAll(): Goal[] {
+    const db = getDB();
+    const rows = db.prepare('SELECT * FROM goals').all() as any[];
+    return rows.map(r => ({
+      id: r.id,
+      statement: r.statement,
+      category: r.category,
+      currentVal: r.current_val,
+      targetVal: r.target_val,
+      unit: r.unit,
+      deadline: r.deadline,
+      activePath: r.active_path,
+      status: r.status,
+      createdAt: new Date(r.created_at + 'Z')
+    }));
+  }
+
+  /**
    * Gets a specific goal.
    */
   static getById(id: string): Goal | null {
