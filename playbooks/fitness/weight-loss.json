@@ -1,0 +1,21 @@
+{
+  "id": "weight-loss",
+  "name": "Weight Loss",
+  "category": "fitness",
+  "description": "Sustainable body recomposition protocol.",
+  "paths": [
+    {
+      "id": "keto-path",
+      "name": "Keto Protocol",
+      "description": "Low-carb high-fat state transition.",
+      "estimatedWeeks": 8,
+      "confidenceScore": 80,
+      "requiredHoursPerWeek": 5,
+      "milestones": [
+        { "week": 1, "description": "Entry into ketosis", "metric": 1 },
+        { "week": 8, "description": "Lose 5kg body fat", "metric": 5 }
+      ],
+      "tags": ["fitness", "diet"]
+    }
+  ]
+}

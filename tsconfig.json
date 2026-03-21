@@ -4,15 +4,16 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "lib": ["ESNext"],
-    "outDir": "dist",
-    "rootDir": "src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
     "declaration": true,
+    "baseUrl": ".",
+    "paths": {
+      "@opengoat/ink-ui": ["packages/ink-ui/src/index.tsx"],
+      "@opengoat/ink-ui/*": ["packages/ink-ui/src/*"]
+    },
     "jsx": "react-jsx"
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "tests"]
+  "include": ["src/**/*", "packages/ink-ui/src/**/*"],
 }

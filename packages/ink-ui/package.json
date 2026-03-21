@@ -1,0 +1,22 @@
+{
+  "name": "@opengoat/ink-ui",
+  "version": "1.0.0",
+  "description": "Exportable Ink/React terminal components for OpenGOAT.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --clean --dts",
+    "dev": "tsup src/index.ts --format esm --watch"
+  },
+  "peerDependencies": {
+    "ink": "^4.0.0",
+    "react": "^18.0.0"
+  },
+  "devDependencies": {
+    "ink": "^4.4.1",
+    "react": "^18.3.1",
+    "typescript": "^5.4.5",
+    "tsup": "^8.0.2"
+  }
+}

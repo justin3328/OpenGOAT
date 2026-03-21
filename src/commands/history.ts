@@ -1,20 +1,22 @@
-import { storage } from '../lib/storage.js';
-import chalk from 'chalk';
+import { getDB } from '../data/db.js';
+import { GoalsRepo } from '../data/repos/goals.repo.js';
 
 export async function showHistory() {
-  const history = storage.get<any[]>('history') || [];
-  
-  console.clear();
-  console.log(`\n  ${chalk.bold('GOAT PERFORMANCE HISTORY')}\n`);
+  const goals = GoalsRepo.getAllActive();
+  if (goals.length === 0) return;
 
-  if (history.length === 0) {
-    console.log('  No historical records found.');
-    return;
+  const db = getDB();
+  for (const goal of goals) {
+    const history = db.prepare('SELECT * FROM week_scores WHERE goal_id = ? ORDER BY week_number DESC').all(goal.id) as any[];
+    
+    console.log(`\nHISTORY: ${goal.statement}`);
+    if (history.length === 0) {
+      console.log('No historical protocols recorded yet.');
+      continue;
+    }
+
+    history.forEach(h => {
+      console.log(`Week ${h.week_number}: Score ${h.total} | Rank ${h.rank} | XP ${h.xp}`);
+    });
   }
-
-  console.log(`  ${chalk.dim('WEEK'.padEnd(8))} ${chalk.dim('SCORE'.padEnd(8))} ${chalk.dim('MISSIONS'.padEnd(12))} ${chalk.dim('XP')}`);
-  history.forEach(h => {
-    console.log(`  ${h.week.toString().padEnd(8)} ${h.score.toString().padEnd(8)} ${h.completed}/${h.total}         ${h.xp}`);
-  });
-  console.log('');
 }

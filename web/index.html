@@ -1,157 +1,1329 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenGOAT 🐐 Dashboard</title>
-    <style>
-        :root {
-            --bg: #0a0a0a;
-            --surface: #141414;
-            --accent: #E8A84A;
-            --teal: #4ADE80;
-            --text: #e0e0e0;
-            --text-dim: #888;
-        }
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Courier New', Courier, monospace;
-            padding: 2rem;
-            margin: 0;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        header {
-            border-bottom: 2px solid var(--accent);
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            padding-bottom: 1rem;
-        }
-        h1 { margin: 0; font-size: 2rem; }
-        .grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-        }
-        .card {
-            background: var(--surface);
-            border: 1px solid #333;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-        .label { color: var(--text-dim); text-transform: uppercase; font-size: 0.8rem; margin-bottom: 0.5rem; }
-        .score { font-size: 3rem; color: var(--teal); }
-        .meter {
-            height: 10px;
-            background: #222;
-            margin-top: 1rem;
-            position: relative;
-        }
-        .meter-fill {
-            height: 100%;
-            background: var(--teal);
-            width: 0%;
-            transition: width 1s;
-        }
-        .mission-item {
-            padding: 1rem 0;
-            border-bottom: 1px solid #222;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        .mission-item:last-child { border-bottom: none; }
-        .checkbox { width: 14px; height: 14px; border: 1px solid var(--teal); }
-        .checkbox.complete { background: var(--teal); }
-        .timestamp { font-size: 0.8rem; color: var(--text-dim); margin-top: 2rem; text-align: right; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenGOAT — Goal Operating System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #080808;
+    --bg2:       #0e0e0e;
+    --bg3:       #141414;
+    --border:    #1e1e1e;
+    --border2:   #252525;
+    --amber:     #EF9F27;
+    --amber-dim: #7a5213;
+    --amber-glow:#EF9F2722;
+    --teal:      #1D9E75;
+    --teal-dim:  #0a4a35;
+    --teal-glow: #1D9E7522;
+    --red:       #E24B4A;
+    --red-dim:   #4a1515;
+    --white:     #e8e6df;
+    --muted:     #555550;
+    --muted2:    #363632;
+    --ghost:     #2a2a28;
+    --mono:      'JetBrains Mono', monospace;
+    --display:   'Orbitron', monospace;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--mono);
+    font-size: 12px;
+    height: 100vh;
+    overflow: hidden;
+    cursor: default;
+    user-select: none;
+  }
+
+  /* scanline overlay */
+  body::before {
+    content:'';
+    position:fixed;
+    inset:0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.06) 2px,
+      rgba(0,0,0,0.06) 4px
+    );
+    pointer-events:none;
+    z-index:999;
+  }
+
+  /* vignette */
+  body::after {
+    content:'';
+    position:fixed;
+    inset:0;
+    background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.7) 100%);
+    pointer-events:none;
+    z-index:998;
+  }
+
+  .tui {
+    display: grid;
+    grid-template-rows: 32px 1fr 180px 28px;
+    grid-template-columns: 240px 1fr 220px;
+    height: 100vh;
+    gap: 1px;
+    background: var(--border);
+  }
+
+  /* ─── TOP BAR ─── */
+  .topbar {
+    grid-column: 1 / -1;
+    background: var(--bg2);
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    gap: 0;
+    border-bottom: 1px solid var(--border2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .topbar::after {
+    content:'';
+    position:absolute;
+    bottom:0; left:0; right:0;
+    height:1px;
+    background: linear-gradient(90deg, transparent, var(--amber), transparent);
+    opacity:.4;
+  }
+
+  .logo {
+    font-family: var(--display);
+    font-size: 13px;
+    font-weight: 900;
+    color: var(--amber);
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 20px;
+  }
+
+  .logo-goat {
+    font-size: 15px;
+    animation: goat-bob 3s ease-in-out infinite;
+  }
+
+  @keyframes goat-bob {
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(-2px); }
+  }
+
+  .topbar-divider {
+    width: 1px;
+    height: 16px;
+    background: var(--border2);
+    margin: 0 14px;
+  }
+
+  .topbar-stat {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-right: 16px;
+  }
+
+  .topbar-stat .lbl {
+    color: var(--muted);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+
+  .topbar-stat .val {
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .val-amber { color: var(--amber); }
+  .val-teal  { color: var(--teal); }
+  .val-red   { color: var(--red); }
+  .val-white { color: var(--white); }
+
+  .topbar-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .rank-badge {
+    font-family: var(--display);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    padding: 3px 10px;
+    border: 1px solid var(--teal);
+    color: var(--teal);
+    background: var(--teal-glow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .rank-badge::before {
+    content:'';
+    position:absolute;
+    inset:0;
+    background: linear-gradient(90deg,transparent,rgba(29,158,117,.1),transparent);
+    animation: shimmer 2.5s infinite;
+  }
+
+  @keyframes shimmer {
+    0%{transform:translateX(-100%)}
+    100%{transform:translateX(100%)}
+  }
+
+  .clock {
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: .05em;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--teal);
+    box-shadow: 0 0 6px var(--teal);
+    animation: pulse-dot 2s infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%,100%{ opacity:1; box-shadow: 0 0 6px var(--teal); }
+    50%{ opacity:.5; box-shadow: 0 0 2px var(--teal); }
+  }
+
+  /* ─── LEFT PANEL — GAP ENGINE ─── */
+  .panel-left {
+    background: var(--bg2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .panel-header {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .panel-title {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .15em;
+    color: var(--muted);
+  }
+
+  .panel-accent {
+    width: 4px; height: 4px;
+    background: var(--amber);
+    box-shadow: 0 0 4px var(--amber);
+  }
+
+  .panel-body {
+    padding: 12px;
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* Gap meter */
+  .gap-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 4px;
+  }
+
+  .gap-goal {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+
+  .gap-pct {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--amber);
+  }
+
+  .gap-bar-wrap {
+    position: relative;
+    height: 8px;
+    background: var(--ghost);
+    border: 1px solid var(--border2);
+    overflow: hidden;
+  }
+
+  .gap-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--amber-dim), var(--amber));
+    transition: width 1.5s cubic-bezier(.4,0,.2,1);
+    position: relative;
+  }
+
+  .gap-bar::after {
+    content:'';
+    position:absolute;
+    right:0; top:0; bottom:0;
+    width: 3px;
+    background: var(--amber);
+    box-shadow: 0 0 8px var(--amber);
+  }
+
+  .gap-numbers {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+  }
+
+  .gap-num {
+    font-size: 10px;
+  }
+
+  .gap-current { color: var(--amber); font-weight: 600; }
+  .gap-target  { color: var(--muted); }
+
+  /* Velocity block */
+  .vel-block {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    padding: 8px 10px;
+  }
+
+  .vel-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3px 0;
+    border-bottom: 1px solid var(--ghost);
+  }
+
+  .vel-row:last-child { border-bottom: none; }
+
+  .vel-lbl {
+    font-size: 9px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+
+  .vel-val {
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  /* Sparkline */
+  .sparkline-wrap {
+    position: relative;
+  }
+
+  .sparkline-lbl {
+    font-size: 9px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 6px;
+  }
+
+  .sparkline-svg {
+    width: 100%;
+    height: 40px;
+  }
+
+  /* Path indicator */
+  .path-mini {
+    background: var(--bg3);
+    border: 1px solid var(--teal-dim);
+    border-left: 2px solid var(--teal);
+    padding: 8px 10px;
+  }
+
+  .path-mini-label {
+    font-size: 8px;
+    color: var(--teal);
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    margin-bottom: 3px;
+  }
+
+  .path-mini-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 2px;
+  }
+
+  .path-mini-week {
+    font-size: 9px;
+    color: var(--muted);
+  }
+
+  /* ─── CENTER — COMMAND AREA ─── */
+  .panel-center {
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ASCII art header */
+  .ascii-header {
+    padding: 14px 18px 0;
+    flex-shrink: 0;
+  }
+
+  .ascii-art {
+    font-size: 7.5px;
+    line-height: 1.15;
+    color: var(--amber-dim);
+    letter-spacing: .05em;
+    white-space: pre;
+    font-weight: 700;
+    opacity: .7;
+  }
+
+  .ascii-tagline {
+    font-size: 9px;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  /* Divider */
+  .center-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border2) 20%, var(--border2) 80%, transparent);
+    margin: 10px 18px;
+    flex-shrink: 0;
+  }
+
+  /* Output area */
+  .output-area {
+    flex: 1;
+    padding: 0 18px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border2) transparent;
+  }
+
+  .output-area::-webkit-scrollbar { width: 3px; }
+  .output-area::-webkit-scrollbar-track { background: transparent; }
+  .output-area::-webkit-scrollbar-thumb { background: var(--border2); }
+
+  .out-line {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.6;
+    animation: fade-in-line .2s ease;
+  }
+
+  @keyframes fade-in-line {
+    from{ opacity:0; transform:translateY(2px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  .out-prefix {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .pfx-cmd    { color: var(--amber); }
+  .pfx-ok     { color: var(--teal); }
+  .pfx-info   { color: var(--muted); }
+  .pfx-warn   { color: var(--red); }
+  .pfx-system { color: var(--muted2); }
+
+  .out-text {
+    font-size: 11px;
+    color: var(--white);
+    flex: 1;
+  }
+
+  .out-text.muted { color: var(--muted); }
+  .out-text.amber { color: var(--amber); font-weight: 600; }
+  .out-text.teal  { color: var(--teal); }
+  .out-text.dim   { color: var(--muted2); }
+
+  /* Gap result box */
+  .gap-result {
+    margin: 6px 0;
+    border: 1px solid var(--border2);
+    border-left: 2px solid var(--amber);
+    background: var(--bg2);
+    padding: 10px 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 20px;
+  }
+
+  .gr-item { display: flex; flex-direction: column; gap: 1px; }
+  .gr-lbl  { font-size: 8px; color: var(--muted); text-transform: uppercase; letter-spacing:.08em; }
+  .gr-val  { font-size: 13px; font-weight: 700; color: var(--amber); }
+  .gr-val.teal { color: var(--teal); }
+  .gr-val.white { color: var(--white); font-size: 11px; }
+
+  /* Path list */
+  .path-list {
+    margin: 4px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .path-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    cursor: pointer;
+    transition: all .15s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .path-item:hover {
+    border-color: var(--border2);
+    background: var(--bg3);
+  }
+
+  .path-item.active {
+    border-color: var(--amber-dim);
+    border-left: 2px solid var(--amber);
+    background: var(--amber-glow);
+  }
+
+  .path-rank {
+    font-size: 9px;
+    color: var(--muted);
+    width: 18px;
+    flex-shrink: 0;
+  }
+
+  .path-item.active .path-rank { color: var(--amber); }
+
+  .path-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--white);
+    flex: 1;
+  }
+
+  .path-conf {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border: 1px solid;
+  }
+
+  .path-conf.high { color: var(--teal); border-color: var(--teal-dim); background: var(--teal-glow); }
+  .path-conf.med  { color: var(--amber); border-color: var(--amber-dim); background: var(--amber-glow); }
+  .path-conf.low  { color: var(--muted); border-color: var(--border2); }
+
+  .path-weeks { font-size: 9px; color: var(--muted); width: 45px; text-align: right; flex-shrink:0; }
+
+  /* Command input */
+  .cmd-area {
+    padding: 10px 18px 12px;
+    border-top: 1px solid var(--border2);
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .cmd-area::before {
+    content:'';
+    position:absolute;
+    top:0; left:18px; right:18px;
+    height:1px;
+    background: linear-gradient(90deg, var(--amber-dim), transparent);
+    opacity:.5;
+  }
+
+  .cmd-prompt {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cmd-label {
+    color: var(--amber);
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .cmd-label::before {
+    content: '🐐';
+    font-size: 12px;
+  }
+
+  .cmd-input-wrap {
+    flex: 1;
+    position: relative;
+  }
+
+  .cmd-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--white);
+    font-family: var(--mono);
+    font-size: 12px;
+    width: 100%;
+    caret-color: var(--amber);
+  }
+
+  .cmd-hint {
+    font-size: 9px;
+    color: var(--muted2);
+    margin-top: 5px;
+    letter-spacing: .05em;
+  }
+
+  .cmd-hint span {
+    color: var(--muted);
+    margin-right: 10px;
+    padding: 1px 5px;
+    border: 1px solid var(--border2);
+  }
+
+  /* ─── RIGHT PANEL — SCORE ─── */
+  .panel-right {
+    background: var(--bg2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Score display */
+  .score-hero {
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--border2);
+    text-align: center;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .score-number {
+    font-family: var(--display);
+    font-size: 48px;
+    font-weight: 900;
+    color: var(--amber);
+    line-height: 1;
+    letter-spacing: -.02em;
+    text-shadow: 0 0 40px rgba(239,159,39,.3);
+    animation: score-breathe 4s ease-in-out infinite;
+  }
+
+  @keyframes score-breathe {
+    0%,100%{ text-shadow: 0 0 30px rgba(239,159,39,.2); }
+    50%{ text-shadow: 0 0 60px rgba(239,159,39,.5); }
+  }
+
+  .score-update-pulse {
+    animation: scale-up 0.5s ease;
+  }
+  @keyframes scale-up {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); color: #fff; text-shadow: 0 0 80px rgba(239,159,39,.9); }
+    100% { transform: scale(1); }
+  }
+
+  .score-label {
+    font-size: 8px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .2em;
+    margin-top: 3px;
+  }
+
+  .score-rank {
+    font-family: var(--display);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .3em;
+    color: var(--teal);
+    margin-top: 5px;
+  }
+
+  /* Score bars */
+  .score-bars {
+    padding: 10px 12px;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--border2);
+  }
+
+  .sbar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 7px;
+  }
+
+  .sbar-row:last-child { margin-bottom: 0; }
+
+  .sbar-lbl {
+    font-size: 8px;
+    color: var(--muted);
+    width: 70px;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+
+  .sbar-track {
+    flex: 1;
+    height: 3px;
+    background: var(--ghost);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sbar-fill {
+    height: 100%;
+    transition: width 2s cubic-bezier(.4,0,.2,1);
+  }
+
+  .sbar-amber { background: var(--amber); }
+  .sbar-teal  { background: var(--teal); }
+
+  .sbar-val {
+    font-size: 9px;
+    font-weight: 700;
+    width: 28px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* XP block */
+  .xp-block {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border2);
+    flex-shrink: 0;
+  }
+
+  .xp-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .xp-lbl {
+    font-size: 9px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+
+  .xp-val {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--amber);
+  }
+
+  .xp-bar-wrap {
+    height: 4px;
+    background: var(--ghost);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .xp-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--amber-dim), var(--amber));
+    transition: width 2s cubic-bezier(.4,0,.2,1);
+  }
+
+  .xp-next {
+    font-size: 8px;
+    color: var(--muted2);
+    margin-top: 3px;
+    text-align: right;
+  }
+
+  /* Intervention block */
+  .intervention {
+    margin: 10px 12px;
+    border: 1px solid var(--red-dim);
+    border-left: 2px solid var(--red);
+    padding: 8px;
+    background: rgba(226,75,74,.04);
+    flex-shrink: 0;
+  }
+
+  .intv-label {
+    font-size: 8px;
+    color: var(--red);
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    margin-bottom: 4px;
+  }
+
+  .intv-text {
+    font-size: 10px;
+    color: var(--white);
+    line-height: 1.5;
+  }
+
+  /* Keys legend */
+  .keys-legend {
+    margin-top: auto;
+    padding: 10px 12px;
+    border-top: 1px solid var(--border2);
+    flex-shrink: 0;
+  }
+
+  .key-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+
+  .key-row:last-child { margin-bottom: 0; }
+
+  .key-cap {
+    font-size: 8px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border: 1px solid var(--border2);
+    background: var(--bg3);
+    color: var(--muted);
+    min-width: 36px;
+    text-align: center;
+  }
+
+  .key-desc {
+    font-size: 9px;
+    color: var(--muted2);
+  }
+
+  /* ─── BOTTOM — PATH SELECTOR ─── */
+  .panel-bottom {
+    grid-column: 1 / -1;
+    background: var(--bg2);
+    border-top: 1px solid var(--border2);
+    display: flex;
+    align-items: stretch;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .panel-bottom::before {
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0;
+    height:1px;
+    background: linear-gradient(90deg, var(--amber-dim), transparent 40%);
+    opacity:.6;
+  }
+
+  .bottom-section {
+    flex: 1;
+    padding: 10px 14px;
+    border-right: 1px solid var(--border2);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .bottom-section:last-child { border-right: none; }
+
+  .bottom-title {
+    font-size: 8px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .bottom-title::after {
+    content:'';
+    flex:1;
+    height:1px;
+    background: var(--border2);
+  }
+
+  .resource-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 12px;
+  }
+
+  .res-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .res-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .res-dot.full    { background: var(--teal); }
+  .res-dot.partial { background: var(--amber); }
+  .res-dot.empty   { background: var(--muted2); }
+
+  .res-lbl  { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .res-val  { font-size: 10px; color: var(--white); font-weight: 500; }
+
+  .milestone-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .ms-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+  }
+
+  .ms-week {
+    font-size: 8px;
+    color: var(--muted);
+    width: 36px;
+    flex-shrink: 0;
+  }
+
+  .ms-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .ms-dot.done    { background: var(--teal); }
+  .ms-dot.current { background: var(--amber); box-shadow: 0 0 4px var(--amber); }
+  .ms-dot.future  { background: var(--muted2); }
+
+  .ms-text { color: var(--white); flex: 1; }
+  .ms-text.done { color: var(--muted); text-decoration: line-through; }
+  .ms-metric { font-size: 9px; color: var(--amber); font-weight: 600; }
+
+  /* hook count */
+  .hook-list { display: flex; flex-direction: column; gap: 4px; }
+  .hook-item { display: flex; align-items: center; gap: 6px; font-size: 10px; }
+  .hook-status { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .hook-status.active { background: var(--teal); }
+  .hook-status.idle   { background: var(--muted2); }
+  .hook-name { color: var(--white); }
+  .hook-trigger { color: var(--muted); font-size: 9px; }
+
+  /* ─── STATUS BAR ─── */
+  .statusbar {
+    grid-column: 1 / -1;
+    background: var(--bg3);
+    border-top: 1px solid var(--border2);
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 0;
+    font-size: 9px;
+  }
+
+  .sb-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0 10px;
+    height: 100%;
+    border-right: 1px solid var(--border2);
+    color: var(--muted);
+  }
+
+  .sb-item:first-child { padding-left: 0; }
+
+  .sb-item .lbl { color: var(--muted2); }
+  .sb-item .val { color: var(--muted); }
+
+  .sb-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--muted2);
+  }
+
+  .sb-right .active { color: var(--teal); }
+
+  /* Animation utilities */
+  .fade-in {
+    animation: fade-in .4s ease both;
+  }
+
+  @keyframes fade-in {
+    from{ opacity:0; }
+    to{ opacity:1; }
+  }
+
+  /* Typing cursor */
+  .cursor {
+    display: inline-block;
+    width: 7px;
+    height: 13px;
+    background: var(--amber);
+    vertical-align: middle;
+    animation: blink .9s step-end infinite;
+    margin-left: 1px;
+  }
+
+  @keyframes blink {
+    0%,100%{ opacity:1; }
+    50%{ opacity:0; }
+  }
+
+  /* Noise texture overlay */
+  .noise {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 997;
+    opacity: .025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* scroll to bottom */
+  .scroll-anchor { height: 1px; }
+</style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div>
-                <h1 id="goal-title">OPENGOAT</h1>
-                <div class="label" id="path-name">PATH: --</div>
-            </div>
-            <div id="date-time" class="timestamp"></div>
-        </header>
+<div class="noise"></div>
 
-        <div class="grid">
-            <main>
-                <div class="card">
-                    <div class="label">Displacement Gap</div>
-                    <div id="gap-display" style="font-size: 1.5rem;">$0.00 / $0.00</div>
-                    <div class="meter"><div id="gap-meter" class="meter-fill"></div></div>
-                </div>
+<div class="tui">
 
-                <div class="card">
-                    <div class="label">Protocol Missions</div>
-                    <div id="mission-list">
-                        <!-- Missions injected here -->
-                    </div>
-                </div>
-            </main>
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="logo">
+      <span class="logo-goat">🐐</span>
+      OpenGOAT
+    </div>
+    <div class="topbar-divider"></div>
+    <div class="topbar-stat">
+      <span class="lbl">goal</span>
+      <span class="val val-white" id="headerGoal">--</span>
+    </div>
+    <div class="topbar-stat">
+      <span class="lbl">gap</span>
+      <span class="val val-amber" id="headerGap">--</span>
+    </div>
+    <div class="topbar-stat">
+      <span class="lbl">closed</span>
+      <span class="val val-teal" id="headerPct">--%</span>
+    </div>
+    <div class="topbar-stat">
+      <span class="lbl">velocity</span>
+      <span class="val val-amber" id="headerVel">--/wk</span>
+    </div>
+    <div class="topbar-right">
+      <span class="clock" id="clock">--:--:--</span>
+      <div class="rank-badge" id="headerRank">OPERATOR</div>
+      <div class="status-dot"></div>
+    </div>
+  </header>
 
-            <aside>
-                <div class="card">
-                    <div class="label">Operator Score</div>
-                    <div id="score-val" class="score">--</div>
-                    <div class="label" id="rank-name">RANK: --</div>
-                </div>
+  <!-- LEFT PANEL -->
+  <aside class="panel-left">
+    <div class="panel-header">
+      <span class="panel-title">gap engine</span>
+      <div class="panel-accent"></div>
+    </div>
+    <div class="panel-body">
 
-                <div class="card">
-                    <div class="label">Performance XP</div>
-                    <div id="xp-val" style="font-size: 1.5rem;">0 XP</div>
-                </div>
-            </aside>
+      <!-- Main gap meter -->
+      <div>
+        <div class="gap-label">
+          <span class="gap-goal" id="meterGoalLabel">Goal: --</span>
+          <span class="gap-pct" id="meterPct">--%</span>
         </div>
-        <div id="last-updated" class="timestamp">Last updated: --</div>
+        <div class="gap-bar-wrap">
+          <div class="gap-bar" id="mainBar" style="width:0%"></div>
+        </div>
+        <div class="gap-numbers">
+          <span class="gap-num gap-current" id="meterCurrent">--</span>
+          <span class="gap-num gap-target" id="meterTarget">--</span>
+        </div>
+      </div>
+
+      <!-- Velocity metrics -->
+      <div class="vel-block">
+        <div class="vel-row">
+          <span class="vel-lbl">this week</span>
+          <span class="vel-val val-amber" id="velWeek">+0</span>
+        </div>
+        <div class="vel-row">
+          <span class="vel-lbl">needed/wk</span>
+          <span class="vel-val val-white" id="velNeeded">--</span>
+        </div>
+        <div class="vel-row">
+          <span class="vel-lbl">projection</span>
+          <span class="vel-val val-red" id="projection">--</span>
+        </div>
+        <div class="vel-row">
+          <span class="vel-lbl">status</span>
+          <span class="vel-val val-teal" id="statusLabel">SYNCED</span>
+        </div>
+      </div>
+
+      <!-- Sparkline -->
+      <div class="sparkline-wrap">
+        <div class="sparkline-lbl">30-day velocity</div>
+        <svg class="sparkline-svg" viewBox="0 0 200 40" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="spkGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#EF9F27" stop-opacity=".4"/>
+              <stop offset="100%" stop-color="#EF9F27" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M0,32 L10,30 L20,28 L30,32 L40,25 L50,22 L60,26 L70,18 L80,20 L90,16 L100,19 L110,12 L120,15 L130,10 L140,13 L150,8 L160,11 L170,7 L180,9 L190,5 L200,8" fill="none" stroke="#EF9F27" stroke-width="1.5"/>
+          <path d="M0,32 L10,30 L20,28 L30,32 L40,25 L50,22 L60,26 L70,18 L80,20 L90,16 L100,19 L110,12 L120,15 L130,10 L140,13 L150,8 L160,11 L170,7 L180,9 L190,5 L200,8 L200,40 L0,40Z" fill="url(#spkGrad)"/>
+        </svg>
+      </div>
+
+      <!-- Active path mini -->
+      <div class="path-mini">
+        <div class="path-mini-label">active path</div>
+        <div class="path-mini-name" id="activePathName">None Selected</div>
+        <div class="path-mini-week" id="activePathWeek">Initialize opengoat to begin</div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- CENTER PANEL -->
+  <main class="panel-center">
+    <div class="ascii-header">
+      <pre class="ascii-art">  ___  ____  ____  __ _  ___  ____   __   ____
+ / _ \(  _ \(  __)(  ( \/ __)(  _ \ / _\ (_  _)
+(   ) ) __/ ) _)  /    / (_ \ ) _ (/    \  )(
+ \_\_/(__)  (____)\_)__)\___)/(____/\_/\_/(__)</pre>
+      <div class="ascii-tagline">gap = goal − current · the fastest path · your number · right now</div>
     </div>
 
-    <script>
-        async function fetchState() {
-            try {
-                const res = await fetch('/api/state');
-                const data = await res.json();
-                updateUI(data);
-            } catch (e) {
-                console.error('Failed to fetch state', e);
-            }
-        }
+    <div class="center-divider"></div>
 
-        function updateUI(state) {
-            document.getElementById('goal-title').innerText = state.goal || 'OPENGOAT';
-            document.getElementById('path-name').innerText = 'PATH: ' + (state.activePath?.name || '--');
-            document.getElementById('date-time').innerText = new Date().toLocaleString();
-            
-            const gap = state.gap || { current: 0, target: 1, unit: 'units' };
-            document.getElementById('gap-display').innerText = `${gap.current} / ${gap.target} ${gap.unit}`;
-            const percent = Math.min(100, Math.round((gap.current / gap.target) * 100));
-            document.getElementById('gap-meter').style.width = percent + '%';
+    <div class="output-area" id="outputArea">
+      <div class="out-line">
+        <span class="out-prefix pfx-system">───</span>
+        <span class="out-text dim">session started · node v20.11.0 · goatbrain v2.0 online</span>
+      </div>
+    </div>
 
-            const score = state.score || { total: 0, rank: 'Recruit', xp: 0 };
-            document.getElementById('score-val').innerText = score.total;
-            document.getElementById('rank-name').innerText = 'RANK: ' + score.rank;
-            document.getElementById('xp-val').innerText = score.xp + ' XP';
+    <div class="cmd-area">
+      <div class="cmd-prompt">
+        <div class="cmd-label">opengoat</div>
+        <div class="cmd-input-wrap">
+          <input class="cmd-input" id="cmdInput" type="text" placeholder="enter command..." autocomplete="off" spellcheck="false">
+        </div>
+      </div>
+      <div class="cmd-hint">
+        <span>log</span>
+        <span>gap</span>
+        <span>paths</span>
+        <span>score</span>
+        <span>share</span>
+        <span>help</span>
+      </div>
+    </div>
+  </main>
 
-            const list = document.getElementById('mission-list');
-            list.innerHTML = (state.missions || []).map(m => `
-                <div class="mission-item">
-                    <div class="checkbox ${m.status === 'complete' ? 'complete' : ''}"></div>
-                    <div style="${m.status === 'complete' ? 'color: #555; text-decoration: line-through;' : ''}">${m.title}</div>
-                </div>
-            `).join('');
+  <!-- RIGHT PANEL -->
+  <aside class="panel-right">
+    <div class="panel-header">
+      <span class="panel-title">operator score</span>
+      <div class="panel-accent"></div>
+    </div>
 
-            document.getElementById('last-updated').innerText = 'Last updated: ' + new Date().toLocaleTimeString();
-        }
+    <div class="score-hero">
+      <div class="score-number" id="scoreNum">--</div>
+      <div class="score-label">total XP: <span id="xpVal">--</span></div>
+      <div class="score-rank" id="sideRank">RECRUIT</div>
+    </div>
 
-        fetchState();
-        setInterval(fetchState, 10000);
-    </script>
+    <div class="score-bars">
+      <div class="sbar-row">
+        <span class="sbar-lbl">momentum</span>
+        <div class="sbar-track"><div class="sbar-fill sbar-amber" id="sb1" style="width:0%"></div></div>
+      </div>
+      <div class="sbar-row">
+        <span class="sbar-lbl">consistency</span>
+        <div class="sbar-track"><div class="sbar-fill sbar-teal" id="sb2" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="xp-block">
+      <div class="xp-row">
+        <span class="xp-lbl">velocity XP</span>
+        <span class="xp-val" id="xpSmall">--</span>
+      </div>
+      <div class="xp-bar-wrap">
+        <div class="xp-bar" id="xpBar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="intervention" id="alertBox">
+      <div class="intv-label">⚡ goatbrain alert</div>
+      <div class="intv-text" id="alertText">System synchronized. Awaiting input.</div>
+    </div>
+
+    <div class="keys-legend">
+      <div class="bottom-title" style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">keybinds</div>
+      <div class="key-row">
+        <span class="key-cap">tab</span>
+        <span class="key-desc">autocomplete</span>
+      </div>
+      <div class="key-row">
+        <span class="key-cap">↑ ↓</span>
+        <span class="key-desc">history</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- BOTTOM PANEL -->
+  <div class="panel-bottom">
+    <div class="bottom-section" style="flex:1">
+      <div class="bottom-title">system status</div>
+      <div class="resource-grid">
+         <div class="res-item"><div class="res-dot full"></div><div class="res-lbl">storage:</div><div class="res-val">sqlite-sync</div></div>
+         <div class="res-item"><div class="res-dot full"></div><div class="res-lbl">intelligence:</div><div class="res-val">groq-8b</div></div>
+         <div class="res-item"><div class="res-dot partial"></div><div class="res-lbl">watcher:</div><div class="res-val">active</div></div>
+      </div>
+    </div>
+    <div class="bottom-section" style="flex:2">
+      <div class="bottom-title">live data bridge</div>
+      <div class="milestone-list" id="logList">
+        <div class="ms-item"><span class="ms-text">Waiting for gap logs...</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATUS BAR -->
+  <footer class="statusbar">
+    <div class="sb-item"><span class="lbl">os</span><span class="val">v1.0.0</span></div>
+    <div class="sb-item"><span class="lbl">db-logs</span><span class="val" id="totalLogs">--</span></div>
+    <div class="sb-right">
+      <span>opengoat.dev</span>
+      <span class="active">● goatbrain online</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+// Polling Replaced with Live Server-Sent Events (SSE)
+const source = new EventSource('/api/state/stream');
+let lastScore = null;
+
+source.onmessage = function(event) {
+  try {
+    const data = JSON.parse(event.data);
+    if (data.error) return;
+
+    // Update Header
+    document.getElementById('headerGoal').textContent = data.goal ? data.goal.split(' ').pop() : '--';
+    document.getElementById('headerGap').textContent = `${data.gap.target - data.gap.current} ${data.gap.unit}`;
+    const pct = ((data.gap.current / data.gap.target) * 100).toFixed(1);
+    document.getElementById('headerPct').textContent = `${pct}%`;
+    document.getElementById('headerRank').textContent = data.score.rank.toUpperCase();
+    
+    // Update Meter
+    document.getElementById('meterGoalLabel').textContent = data.goal;
+    document.getElementById('meterPct').textContent = `${pct}%`;
+    document.getElementById('mainBar').style.width = `${pct}%`;
+    document.getElementById('meterCurrent').textContent = `${data.gap.current} ${data.gap.unit}`;
+    document.getElementById('meterTarget').textContent = `${data.gap.target} ${data.gap.unit}`;
+    
+    // Update Score with animate pulse on change
+    const scoreNum = document.getElementById('scoreNum');
+    if (lastScore !== null && lastScore !== data.score.total) {
+      scoreNum.classList.add('score-update-pulse');
+      setTimeout(() => scoreNum.classList.remove('score-update-pulse'), 500);
+    }
+    lastScore = data.score.total;
+
+    scoreNum.textContent = data.score.total || '--';
+    document.getElementById('xpVal').textContent = data.score.xp.toLocaleString();
+    document.getElementById('xpSmall').textContent = data.score.xp;
+    document.getElementById('sideRank').textContent = data.score.rank.toUpperCase();
+    
+    // Update Meta
+    document.getElementById('activePathName').textContent = data.path || 'None Selected';
+    document.getElementById('totalLogs').textContent = `${data.historyCount} entries`;
+
+  } catch (e) {
+    console.warn("SSE Parse Error:", e);
+  }
+};
+
+source.onerror = function() {
+  console.log("SSE Connection lost. Reconnecting...");
+};
+
+// Interaction mocks for the visual feel
+const input = document.getElementById('cmdInput');
+const output = document.getElementById('outputArea');
+
+input.addEventListener('keydown', async (e) => {
+  if (e.key === 'Enter') {
+    const val = input.value.trim();
+    if (!val) return;
+    input.value = '';
+    
+    const div = document.createElement('div');
+    div.className = 'out-line';
+    div.innerHTML = `<span class="out-prefix pfx-cmd">$</span><span class="out-text amber">opengoat ${val}</span>`;
+    output.appendChild(div);
+    output.scrollTop = output.scrollHeight;
+    
+    if (val.startsWith('log ')) {
+      const num = val.split(' ')[1];
+      await fetch('/api/v1/gap/log', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ value: num, note: 'Web Update' })
+      });
+      fetchState();
+    }
+  }
+});
+
+</script>
 </body>
 </html>

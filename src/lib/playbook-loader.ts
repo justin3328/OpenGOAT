@@ -1,7 +1,5 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { PlaybookSchema } from '../types/index.js';
-
 export async function loadPlaybooks(playbooksDir: string) {
   const categories = await fs.readdir(playbooksDir);
   const playbooks: any[] = [];
@@ -15,12 +13,11 @@ export async function loadPlaybooks(playbooksDir: string) {
       for (const file of files) {
         if (file.endsWith('.json')) {
           const content = await fs.readFile(path.join(categoryPath, file), 'utf-8');
-          const data = JSON.parse(content);
-          const result = PlaybookSchema.safeParse(data);
-          if (result.success) {
-            playbooks.push(result.data);
-          } else {
-            console.error(`Invalid playbook: ${file}`, result.error.format());
+          try {
+            const data = JSON.parse(content);
+            playbooks.push(data);
+          } catch(e) {
+            console.error(`Invalid JSON playbook: ${file}`);
           }
         }
       }

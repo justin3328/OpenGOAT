@@ -1,0 +1,22 @@
+{
+  "id": "content-creator",
+  "name": "Content Creator",
+  "category": "income",
+  "description": "Build an audience and monetize your expertise.",
+  "paths": [
+    {
+      "id": "youtube-path",
+      "name": "YouTube Growth",
+      "description": "The video-first audience path.",
+      "estimatedWeeks": 12,
+      "confidenceScore": 65,
+      "requiredHoursPerWeek": 15,
+      "milestones": [
+        { "week": 1, "description": "Define niche and 10 video ideas", "metric": 0 },
+        { "week": 4, "description": "Publish first 3 videos", "metric": 3 },
+        { "week": 12, "description": "Reach 1,000 subscribers", "metric": 1000 }
+      ],
+      "tags": ["content", "video", "income"]
+    }
+  ]
+}

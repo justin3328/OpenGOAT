@@ -10,25 +10,26 @@ class DefaultStorageAdapter implements IStorageAdapter {
     this.store = new Conf({ projectName: 'opengoat' });
   }
 
-  get<T>(key: string): T | undefined {
-    return this.store.get(key) as T;
+  async initialize(): Promise<void> {}
+  async get<T>(key: string): Promise<T | null> {
+    return (this.store.get(key) as T) || null;
   }
-
-  set<T>(key: string, value: T): void {
+  async set<T>(key: string, value: T): Promise<void> {
     this.store.set(key, value);
   }
-
-  delete(key: string): void {
+  async delete(key: string): Promise<void> {
     this.store.delete(key);
   }
-
-  clear(): void {
-    this.store.clear();
+  async query<T>(sql: string, params?: unknown[]): Promise<T[]> {
+    return [];
   }
-
+  async transaction<T>(fn: () => Promise<T>): Promise<T> {
+    return fn();
+  }
+  async close(): Promise<void> {}
   getAll(): Record<string, unknown> {
     return this.store.store;
   }
 }
 
-export const storage = new DefaultStorageAdapter();
+export const storage: IStorageAdapter = new DefaultStorageAdapter();

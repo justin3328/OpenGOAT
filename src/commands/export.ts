@@ -3,7 +3,7 @@ import { storage } from '../lib/storage.js';
 import chalk from 'chalk';
 
 export async function exportMarkdown() {
-  const state = storage.getAll();
+  const state = (storage as any).getAll();
   const date = new Date().toISOString().split('T')[0];
   const filename = `opengoat-export-${date}.md`;
 

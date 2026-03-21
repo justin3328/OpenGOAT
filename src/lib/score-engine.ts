@@ -1,4 +1,4 @@
-import type { Mission, OperatorScore } from '../types/index.ts';
+import { Mission, OperatorScore } from '../types/index.js';
 
 export function calculateScore(missions: Mission[], weekNumber: number): OperatorScore {
   const total = missions.length;
@@ -6,9 +6,9 @@ export function calculateScore(missions: Mission[], weekNumber: number): Operato
   const missed = missions.filter(m => m.status === 'missed').length;
 
   const execution = total > 0 ? Math.round((completed / total) * 100) : 0;
-  const consistency = Math.max(0, 100 - missed * 15);
+  const consistency = Math.max(0, 100 - (missed * 15));
   const capitalVelocity = Math.min(100, execution * 1.1);
-  const reflection = weekNumber > 1 ? 10 : 0;
+  const reflection = 10; // Default participation bonus
 
   const composite = total === 0 ? 0 : Math.round(
     execution * 0.4 +
@@ -24,5 +24,5 @@ export function calculateScore(missions: Mission[], weekNumber: number): Operato
     composite >= 70 ? 'Ghost' :
     composite >= 40 ? 'Operator' : 'Recruit';
 
-  return { execution, consistency, capitalVelocity, reflection, total: composite, rank, xp };
+  return { execution, consistency, capitalVelocity, reflection, total: composite, rank, xp, weekNumber };
 }

@@ -1,29 +1,26 @@
-import type { Gap, Path } from '../types/index.js';
+import { Gap, Path, GoatState } from '../types/index.js';
 
 export function calculateGap(current: number, target: number, deadline: Date): Gap {
-  const weeksRemaining = Math.max(1, Math.ceil(
-    (deadline.getTime() - Date.now()) / (7 * 24 * 60 * 60 * 1000)
-  ));
-  const velocity = (target - current) / weeksRemaining;
+  const now = new Date();
+  const weeksRemaining = Math.max(1, Math.ceil((deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24 * 7)));
+  const totalGap = target - current;
+  const weeklyVelocityNeeded = totalGap / weeksRemaining;
+
   return {
-    category: 'income',
+    category: 'income', // default, updated by caller
     current,
     target,
-    unit: 'USD/month',
+    unit: 'units',
     deadline,
-    velocity
+    weeklyVelocityNeeded,
+    currentVelocity: 0,
+    weeksRemaining,
+    percentClosed: Math.round((current / target) * 100)
   };
 }
 
 export function scorePathBySpeed(path: Path, gap: Gap): number {
-  const urgencyWeight = gap.velocity > 0 ? gap.velocity / (gap.target - gap.current) : 0;
-  const timeScore = Math.max(0, 100 - path.estimatedWeeks * 2);
-  const confidenceScore = path.confidenceScore;
-  return Math.round((timeScore * 0.4) + (confidenceScore * 0.4) + (urgencyWeight * 100 * 0.2));
-}
-
-export function rankPaths(paths: Path[], gap: Gap): Path[] {
-  return [...paths]
-    .map(p => ({ ...p, confidenceScore: scorePathBySpeed(p, gap) }))
-    .sort((a, b) => b.confidenceScore - a.confidenceScore);
+  const speedScore = Math.max(0, 100 - (path.estimatedWeeks - gap.weeksRemaining) * 10);
+  const composite = (speedScore * 0.7) + (path.confidenceScore * 0.3);
+  return Math.round(composite);
 }
