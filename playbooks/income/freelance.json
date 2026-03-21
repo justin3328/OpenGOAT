@@ -1,0 +1,51 @@
+{
+  "id": "freelance",
+  "name": "Freelance & Services",
+  "category": "income",
+  "description": "Sell your skills. Get paid this week.",
+  "paths": [
+    {
+      "id": "content-writer",
+      "name": "Content Writing",
+      "description": "Write articles and copy for brands.",
+      "estimatedWeeks": 4,
+      "confidenceScore": 85,
+      "requiredHoursPerWeek": 15,
+      "milestones": [
+        {
+          "week": 1,
+          "description": "Set up portfolio and outreach 10 leads",
+          "metric": 0
+        },
+        {
+          "week": 2,
+          "description": "Land first $50 project",
+          "metric": 50
+        },
+        {
+          "week": 4,
+          "description": "Reach $500 total earnings",
+          "metric": 500
+        }
+      ],
+      "tags": [
+        "writing",
+        "remote"
+      ],
+      "missionTemplates": [
+        {
+          "title": "Create Portfolio",
+          "description": "Compile 3 writing samples into a public link.",
+          "estimatedHours": 2,
+          "xp": 100
+        },
+        {
+          "title": "Cold Email 10 Leads",
+          "description": "Send personalized pitches to 10 potential clients.",
+          "estimatedHours": 3,
+          "xp": 150
+        }
+      ]
+    }
+  ]
+}

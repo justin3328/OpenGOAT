@@ -1,0 +1,25 @@
+{
+  "id": "marathon",
+  "name": "Marathon Runner",
+  "category": "fitness",
+  "description": "Train from 0 to 42.2km.",
+  "paths": [
+    {
+      "id": "couch-to-5k",
+      "name": "Couch to 5K",
+      "description": "The first step toward the marathon.",
+      "estimatedWeeks": 9,
+      "confidenceScore": 95,
+      "requiredHoursPerWeek": 5,
+      "milestones": [
+        { "week": 1, "description": "Run for 1 minute intervals", "metric": 1 },
+        { "week": 5, "description": "Run 20 minutes non-stop", "metric": 20 },
+        { "week": 9, "description": "Complete 5k distance", "metric": 5 }
+      ],
+      "tags": ["running", "beginner"],
+      "missionTemplates": [
+        { "title": "Run 3 and Walk 2", "description": "Repeat 6 times. Focus on consistent pace.", "estimatedHours": 1, "xp": 80 }
+      ]
+    }
+  ]
+}

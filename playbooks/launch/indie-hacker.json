@@ -1,0 +1,24 @@
+{
+  "id": "indie-hacker",
+  "name": "Indie Hacker",
+  "category": "launch",
+  "description": "Launch 12 startups in 12 months.",
+  "paths": [
+    {
+      "id": "product-hunt",
+      "name": "Product Hunt Launch",
+      "description": "Launch your best project on the big stage.",
+      "estimatedWeeks": 2,
+      "confidenceScore": 60,
+      "requiredHoursPerWeek": 10,
+      "milestones": [
+        { "week": 1, "description": "Prepare assets and hunter", "metric": 0 },
+        { "week": 2, "description": "Launch day execution", "metric": 1 }
+      ],
+      "tags": ["launch", "marketing"],
+      "missionTemplates": [
+        { "title": "Design PH Thumbnails", "description": "Create engaging GIFs for the PH gallery.", "estimatedHours": 2, "xp": 150 }
+      ]
+    }
+  ]
+}

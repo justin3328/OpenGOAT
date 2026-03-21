@@ -1,0 +1,25 @@
+{
+  "id": "saas",
+  "name": "SaaS Founder",
+  "category": "income",
+  "description": "Build once, sell many times. The indie hacker path.",
+  "paths": [
+    {
+      "id": "micro-saas",
+      "name": "Micro-SaaS",
+      "description": "Solve a small problem for a niche audience.",
+      "estimatedWeeks": 8,
+      "confidenceScore": 70,
+      "requiredHoursPerWeek": 20,
+      "milestones": [
+        { "week": 1, "description": "Validate 3 ideas with landing pages", "metric": 0 },
+        { "week": 4, "description": "MVP launch to early adopters", "metric": 1 },
+        { "week": 8, "description": "Reach $100 MRR", "metric": 100 }
+      ],
+      "tags": ["coding", "saas"],
+      "missionTemplates": [
+        { "title": "Build Waitlist Page", "description": "Set up a simple site to collect emails for your MVP.", "estimatedHours": 3, "xp": 120 }
+      ]
+    }
+  ]
+}

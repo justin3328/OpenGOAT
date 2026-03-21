@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenGOAT 🐐 Dashboard</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --accent: #E8A84A;
+            --teal: #4ADE80;
+            --text: #e0e0e0;
+            --text-dim: #888;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Courier New', Courier, monospace;
+            padding: 2rem;
+            margin: 0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        header {
+            border-bottom: 2px solid var(--accent);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-bottom: 1rem;
+        }
+        h1 { margin: 0; font-size: 2rem; }
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+        .card {
+            background: var(--surface);
+            border: 1px solid #333;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .label { color: var(--text-dim); text-transform: uppercase; font-size: 0.8rem; margin-bottom: 0.5rem; }
+        .score { font-size: 3rem; color: var(--teal); }
+        .meter {
+            height: 10px;
+            background: #222;
+            margin-top: 1rem;
+            position: relative;
+        }
+        .meter-fill {
+            height: 100%;
+            background: var(--teal);
+            width: 0%;
+            transition: width 1s;
+        }
+        .mission-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid #222;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .mission-item:last-child { border-bottom: none; }
+        .checkbox { width: 14px; height: 14px; border: 1px solid var(--teal); }
+        .checkbox.complete { background: var(--teal); }
+        .timestamp { font-size: 0.8rem; color: var(--text-dim); margin-top: 2rem; text-align: right; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1 id="goal-title">OPENGOAT</h1>
+                <div class="label" id="path-name">PATH: --</div>
+            </div>
+            <div id="date-time" class="timestamp"></div>
+        </header>
+
+        <div class="grid">
+            <main>
+                <div class="card">
+                    <div class="label">Displacement Gap</div>
+                    <div id="gap-display" style="font-size: 1.5rem;">$0.00 / $0.00</div>
+                    <div class="meter"><div id="gap-meter" class="meter-fill"></div></div>
+                </div>
+
+                <div class="card">
+                    <div class="label">Protocol Missions</div>
+                    <div id="mission-list">
+                        <!-- Missions injected here -->
+                    </div>
+                </div>
+            </main>
+
+            <aside>
+                <div class="card">
+                    <div class="label">Operator Score</div>
+                    <div id="score-val" class="score">--</div>
+                    <div class="label" id="rank-name">RANK: --</div>
+                </div>
+
+                <div class="card">
+                    <div class="label">Performance XP</div>
+                    <div id="xp-val" style="font-size: 1.5rem;">0 XP</div>
+                </div>
+            </aside>
+        </div>
+        <div id="last-updated" class="timestamp">Last updated: --</div>
+    </div>
+
+    <script>
+        async function fetchState() {
+            try {
+                const res = await fetch('/api/state');
+                const data = await res.json();
+                updateUI(data);
+            } catch (e) {
+                console.error('Failed to fetch state', e);
+            }
+        }
+
+        function updateUI(state) {
+            document.getElementById('goal-title').innerText = state.goal || 'OPENGOAT';
+            document.getElementById('path-name').innerText = 'PATH: ' + (state.activePath?.name || '--');
+            document.getElementById('date-time').innerText = new Date().toLocaleString();
+            
+            const gap = state.gap || { current: 0, target: 1, unit: 'units' };
+            document.getElementById('gap-display').innerText = `${gap.current} / ${gap.target} ${gap.unit}`;
+            const percent = Math.min(100, Math.round((gap.current / gap.target) * 100));
+            document.getElementById('gap-meter').style.width = percent + '%';
+
+            const score = state.score || { total: 0, rank: 'Recruit', xp: 0 };
+            document.getElementById('score-val').innerText = score.total;
+            document.getElementById('rank-name').innerText = 'RANK: ' + score.rank;
+            document.getElementById('xp-val').innerText = score.xp + ' XP';
+
+            const list = document.getElementById('mission-list');
+            list.innerHTML = (state.missions || []).map(m => `
+                <div class="mission-item">
+                    <div class="checkbox ${m.status === 'complete' ? 'complete' : ''}"></div>
+                    <div style="${m.status === 'complete' ? 'color: #555; text-decoration: line-through;' : ''}">${m.title}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('last-updated').innerText = 'Last updated: ' + new Date().toLocaleTimeString();
+        }
+
+        fetchState();
+        setInterval(fetchState, 10000);
+    </script>
+</body>
+</html>
